@@ -65,6 +65,38 @@ void red::cargar_costos()
             costosNodo[i]=0;         //el costo de comunicacion entre el mismo router es cero
             Tabla[letra]=costosNodo;        //inicializacion del la RED con sus cantidad total de en laces
         }
+        for (int j=0;j<Num_enlaces;j++){ //itera el numero de conexiones existentes
+            getline(archivo,linea2);       //linea por linea
+            Sublinea1=linea2[0];      //primera letra
+            Sublinea2=linea2[1];      //segunda letra
+            costosNodo = Tabla.find(Sublinea1)->second;   //copiamos los costos
+            vectorauxi= Tabla.find(Sublinea2)->second;   //copiamos los costos
+            Sublinea3=linea2[2];      //costo
+            costo=Sublinea3[0]-48;
+            if (linea2.length()>3) {
+                Sublinea3+=linea2[3];
+                costo=costo*10+(Sublinea3[1]-48);    //conversion a entero
+            }
 
+            for (int p=0;p<Num_nodos;p++) {
+                if(Sublinea1==NombreNodos[p]){
+                    pos1=posaux1;
+                }
+                if(Sublinea2==NombreNodos[p]){       //guarda la posicion del enlace
+                    pos2=posaux2;
+                }
+                posaux1++;
+                posaux2++;
+            }
+            costosNodo[pos2]=costo;  // posicion del enlace para saber la posicio del costo del el nodo con este enlace
+            vectorauxi[pos1]=costo;  // posicion del enlace para saber la posicio del costo del el nodo con este enlace                                             //SI las letras son minusculas cambiar 65 po 97
+            Tabla[Sublinea1]=costosNodo; //costos de xy
+            Tabla[Sublinea2]=vectorauxi; //costos de yx
+            conec_auxirouters[Sublinea1+Sublinea2]=costo;  //conexion entre xy
+            conec_auxirouters[Sublinea2+Sublinea1]=costo;  //conexion entre yx
+            posaux1=0;
+            posaux2=0;
+        }
+    archivo.close();
     }
 }

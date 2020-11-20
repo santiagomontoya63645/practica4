@@ -13,5 +13,6 @@ int main()
     Namefile=cosa+Namefile;
     topologia.setFileName(Namefile);
     topologia.iniciar_red();
+    topologia.cargar_costos();
     return 0;
 }

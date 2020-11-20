@@ -14,6 +14,8 @@ private:
     int Num_enlaces;
     vector<int> costosNodo;
     vector<string> NombreNodos;
+    map < string, int > conec_routers;
+     map < string, int > conec_auxirouters;
 public:
     red();
     void setFileName(const string &value);
