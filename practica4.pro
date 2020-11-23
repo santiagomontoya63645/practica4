@@ -4,8 +4,12 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
+        buscar.cpp \
         main.cpp \
-        red.cpp
+        red.cpp \
+        router.cpp
 
 HEADERS += \
-    red.h
+    buscar.h \
+    red.h \
+    router.h
