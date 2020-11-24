@@ -26,6 +26,11 @@ vector<string> red::getNombreNodos() const
     return NombreNodos;
 }
 
+map<string, int> red::getConec_auxirouters() const
+{
+    return conec_auxirouters;
+}
+
 red::red()
 {
 
@@ -278,4 +283,50 @@ void red::Imprimir_Red(map<string,vector<int>> Tabla)
         cout<<endl;
 
     }
+}
+void red::tabla_router(map<string,vector<int>> Tabla)
+{
+    string router;
+    cout<<"ingrese el router que desea ver su tabla de enrutamiento: ";
+    cin>>router;
+    cout<<endl;
+    cout<<"\t"; //tabulador
+    if(Tabla.find(router) != Tabla.end()){
+    for (auto it =Tabla.begin(); it != Tabla.end(); ++it) {   //iterador que recorre el tablero
+        cout<<it->first<<"\t";    //imprime la clave del tablero
+    }
+    cout<<"\n";
+        for (auto it = Tabla.begin(); it != Tabla.end(); ++it) {  //iterador que recorre el tablero
+            if(it->first==router){
+                cout<<it->first<<"\t"; //imprime la clave del tablero
+                for (auto jt = it->second.begin(); jt != it->second.end(); ++jt) { //iterador que toma los valores de nodo atraves de it que y a la ves el map nodo son los  valores son del diccionario tabla
+                        cout<<*jt<<"\t";        //imprimo el valor de nodo y sus valores es un vector de costos
+                    }
+                cout<<endl;
+            }
+        }
+     }
+    else{
+        cout<<endl;
+        cout<<"Router no existe"<<endl;
+     }
+    cout<<endl;
+}
+void red::modificar_enlaces(string nodo, string nodo_invertido, int nuevo_costo,int opcion)
+{
+    if(opcion==1){
+        if(conec_auxirouters.find(nodo) != conec_auxirouters.end() && nuevo_costo!=-1){
+            conec_auxirouters[nodo]=nuevo_costo;
+            conec_auxirouters[nodo_invertido]=nuevo_costo;
+           }
+        if(nuevo_costo==-1){
+            conec_auxirouters.erase(nodo);
+            conec_auxirouters.erase(nodo_invertido);   //atualiza las conexiones existemtes entre los routers
+        }                                              //cuando modifican o ingresan una nueva conexion
+    }
+    if(opcion==2){
+        conec_auxirouters[nodo]=nuevo_costo;
+        conec_auxirouters[nodo_invertido]=nuevo_costo;
+    }
+
 }

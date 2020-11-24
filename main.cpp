@@ -46,7 +46,44 @@ int main()
             cout<< "para ver la tabla de un router ingrese 2: "<<endl;
             cin>>ver;
             if(ver==1) topologia.Imprimir_Red(topologia.getTablaoriginal());
+            if(ver==2) topologia.tabla_router(topologia.getTablaoriginal());
+            cout << "-para VISUALIZAR el menu ingrese 0: "<<endl<<endl;
+        }
+        else if (opcion==2) {
+            topologia.tabla_router(topologia.getTabla());
+            cout<<"para voliver al menu ingrese 0: ";
+        }
+        else if(opcion==3){
+            bool flag=true;
+            int ir,decision;
+            cout<<"Desea modificar costos ya existentes, ya sea modificar su costo o iliminar"<<endl<< "las conexion ingrese 1."<<endl;
+            cout<<"Desea conectar routers ingrese 2."<<endl;
+            cin>>ir;
+            if(ir==1){
+                while(flag==true){
+                    cout<<"NOTA: si desea modificar la conexion ingrese un #>0 y si desa eliminarla"<<endl<<" ingrese como valor -1"<<endl;
+                    nodo.ActualizarCostos(topologia.getConec_auxirouters(),ir);
+                    topologia.setTablaoriginal(nodo.getNodo());//esta linea y la siguente atualizan la red con el costo modificado
+                    topologia.modificar_enlaces(nodo.getCambiar_costo(),nodo.getCambiar_costoinvt(),nodo.getCosto_modificado(),ir);
+                    cout<<"Desea actualizar otro costo?"<<endl;
+                    cout<<"1.Si"<<endl<<"2.No"<<endl;
+                    cin>>decision;
+                    if(decision==1)
+                        flag;
+                    else {
+                        flag=false;
+                    }
+                }
+            }
+            if(ir==2){
+                //conectar routers
+                nodo.ActualizarCostos(topologia.getConec_auxirouters(),ir);
+                topologia.setTablaoriginal(nodo.getNodo());//esta linea y la siguente atualizan la red con el costo modificado
+                topologia.modificar_enlaces(nodo.getCambiar_costo(),nodo.getCambiar_costoinvt(),nodo.getCosto_modificado(),ir);
+            }
+            cout<<"para volver al menu ingrese 0: ";
         }
     }
+
     return 0;
 }

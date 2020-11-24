@@ -29,6 +29,9 @@ public:
     vector<string> getNombreNodos() const;
     void actualizar();
     void Imprimir_Red(map<string,vector<int>>);
+    void tabla_router(map<string,vector<int>> Tabla);
+    map<string, int> getConec_auxirouters() const;
+    void modificar_enlaces(string,string,int,int);
 };
 
 #endif // RED_H
