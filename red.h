@@ -32,6 +32,11 @@ public:
     void tabla_router(map<string,vector<int>> Tabla);
     map<string, int> getConec_auxirouters() const;
     void modificar_enlaces(string,string,int,int);
+    void mejor_camino();
+    void costo_puntual();
+    void setTabla(const map<string, vector<int> > &value);
+    void agregar_routers();
+    void eliminar_routers();
 };
 
 #endif // RED_H

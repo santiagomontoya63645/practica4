@@ -31,6 +31,11 @@ map<string, int> red::getConec_auxirouters() const
     return conec_auxirouters;
 }
 
+void red::setTabla(const map<string, vector<int> > &value)
+{
+    Tabla = value;
+}
+
 red::red()
 {
 
@@ -51,6 +56,9 @@ void red::iniciar_red(){
             for (int k=0;k<2;k++) {
                 costosNodo.push_back(-1);  //no se saben los costos
                 Sublinea=linea[k];
+                if(Sublinea==","){
+                    Sublinea=linea[k+1];
+                }
                 if(Tabla.find(Sublinea) == Tabla.end()){
                     Tabla[Sublinea]=costosNodo;  //se inicializala RED pero no se cono ce el numero de enlaces
                     costosNodo.clear();
@@ -92,10 +100,10 @@ void red::cargar_costos()
             Sublinea2=linea2[1];      //segunda letra
             costosNodo = Tabla.find(Sublinea1)->second;   //copiamos los costos
             vectorauxi= Tabla.find(Sublinea2)->second;   //copiamos los costos
-            Sublinea3=linea2[2];      //costo
+            Sublinea3=linea2[3];      //costo
             costo=Sublinea3[0]-48;
-            if (linea2.length()>3) {
-                Sublinea3+=linea2[3];
+            if (linea2.length()>4) {
+                Sublinea3+=linea2[4];
                 costo=costo*10+(Sublinea3[1]-48);    //conversion a entero
             }
 
@@ -327,6 +335,140 @@ void red::modificar_enlaces(string nodo, string nodo_invertido, int nuevo_costo,
     if(opcion==2){
         conec_auxirouters[nodo]=nuevo_costo;
         conec_auxirouters[nodo_invertido]=nuevo_costo;
+    }
+
+}
+void red::mejor_camino()
+{
+    string nom_router,dest;
+    cout << "Ingrese router origen: ";
+    cin >> nom_router;
+    cout << "Ingrese router destino: ";
+    cin>>dest;
+    if(ruta.find(nom_router+dest) != ruta.end()){
+        cout<<"El mejor camino entre "<<nom_router<<"->"<<dest<<" es: "<<ruta[nom_router+dest]<<endl;
+       }
+    else if(Tabla.find(nom_router)!=Tabla.end() && Tabla.find(dest)!=Tabla.end()) {
+        cout<<"El mejor camino entre "<<nom_router<<"->"<<dest<<" es: "<<nom_router+dest<<endl;
+    }
+    else{
+        cout<<endl;
+        cout<<"Datos incorrectos o no existen"<<endl;
+       }
+}
+void red::costo_puntual()
+{
+    string nom_router,dest;
+    cout << "Ingrese router origen: ";
+    cin >> nom_router;
+    cout << "Ingrese router destino: ";
+    cin>>dest;
+    if(conec_routers.find(nom_router+dest) != conec_routers.end()){
+               cout<<"El COSTO entre "<<nom_router<<"->"<<dest<<" es: "<<conec_routers[nom_router+dest]<<endl;
+       }
+    else{
+        cout<<endl;
+        cout<<"Datos incorrectos o no existen"<<endl;
+    }
+}
+void red::agregar_routers()
+{
+    string name;
+    int salir=0,temporal=0;
+    vector <int> vectorauxi2; //vector auxiliar para insertar el nuEvo nodo en su correspondiente lugar alfabeticamente
+    cout<<"ingrese el nombre del router que desea agregar: ";
+    cin>>name;
+    if(Tablaoriginal.find(name)==Tablaoriginal.end()){
+    Tablaoriginal[name]=costosNodo;
+    NombreNodos.clear();    //para no sobre escribir
+    temporal=0;
+    for (auto i=Tablaoriginal.begin();i!=Tablaoriginal.end();i++) {
+        int k=0;
+        costosNodo=i->second;
+        for (auto j=Tablaoriginal.begin();j!=Tablaoriginal.end();j++) {  //itera el numero de routers existentes
+            if(i->first==name && j->first==name){
+                vectorauxi2.push_back(0);
+                salir=1;
+                temporal=k;
+            }
+
+            else if(j->first==name){
+               vectorauxi2.push_back(-1);
+              if(salir==0){
+                  salir=2;
+                  temporal=k;       //temporarl me indica en que posicion de la matriz tengo que insertar el nuevo router
+            }
+            }
+            else if(i->first==name){
+               vectorauxi2.push_back(-1);
+               if(salir==0){
+                   salir=2;
+                   temporal=k;
+             }
+            }
+            k++;
+        }
+        if(salir==1){
+            costosNodo=vectorauxi2;
+            salir=0;
+        }
+        else {
+            costosNodo.insert(costosNodo.begin()+temporal,vectorauxi2.begin(),vectorauxi2.end());
+        }
+        NombreNodos.push_back(i->first);  //se atualizan los nombres en orden alfabetico
+        Tablaoriginal[i->first]=costosNodo;        //inicializacion del la RED con sus cantidad total de en laces
+        vectorauxi2.clear();
+    }
+    cout<<endl;
+    cout<<"NOTA: para agregar sus conexiones con los demas nodos,ir al MENU y seleccionar"<<endl<<" la opcion correspondiente"<<endl<<endl;
+    cout<<"para volver al menu ingrese 0: ";
+    }
+    else {
+        cout<<endl;
+        cout<<"router ya existe"<<endl;
+    }
+}
+
+void red::eliminar_routers()
+{
+    string name;
+    int parar=0,i=0;
+    vector <int> auxicostos;
+    vector <int> auxicostos2;
+    NombreNodos.clear();
+    costosNodo.clear();
+    cout<<"ingrese el nombre del router a eliminar: ";
+    cin>>name;
+    if(Tablaoriginal.find(name)!=Tablaoriginal.end()){
+        Tablaoriginal.erase(name);
+        for(auto it=Tablaoriginal.begin(),it2=Tabla.begin();it2!=Tabla.end() && i<Tablaoriginal.size() ;++it, ++it2){
+            auxicostos=it->second;
+            int pos=0;
+            for(auto jt=Tabla.begin();jt!=Tabla.end();jt++){
+                if(jt->first!=name){
+                    costosNodo.push_back(auxicostos[pos]);   //se elimina las conxiones de los demas nodos con el nodo eliminado
+                }
+                if(jt->first!=name && parar==0){
+                    NombreNodos.push_back(jt->first);      //atualizamos los nombres de los routers
+                }
+                pos++;
+            }
+            parar=1;
+            if(conec_auxirouters.find(name+it->first)!=conec_auxirouters.end()){
+                conec_auxirouters.erase(it->first+name);       //tambien se elimina las conxiones de los demas nodos con el nodo eliminado
+                conec_auxirouters.erase(name+it->first);
+            }
+            Tablaoriginal[NombreNodos[i]]=costosNodo;
+            auxicostos2=costosNodo;          //solo con el fin del guardar el nuevo tamaño del vector costos
+            costosNodo.clear();
+            auxicostos.clear();
+            i++;
+        }
+       costosNodo=auxicostos2;
+    }
+    else {
+        cout<<endl;
+        cout<<"el router ingresado no existe "<<endl;
     }
 
 }

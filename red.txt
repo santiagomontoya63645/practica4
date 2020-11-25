@@ -1,5 +1,4 @@
-EC4
-DG1
-DC2
-SG6
-SY7
+AB,20
+BC,5
+CD,3
+AD,1

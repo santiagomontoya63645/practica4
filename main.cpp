@@ -83,6 +83,47 @@ int main()
             }
             cout<<"para volver al menu ingrese 0: ";
         }
+        else if(opcion==4) {
+            topologia.Imprimir_Red(topologia.getTabla());
+            cout<<endl;
+            cout<<"para volver al menu ingrese 0: ";
+        }
+        else if (opcion==5) {
+            int ver=0;
+            cout << "Desea saber la mejor ruta entre dos routers?. Ingrese 1." << endl;
+            cout << "Desea saber el costo de envio (MAS EFICIENTE) entre dos routers?. Ingrese 2." << endl;
+            cin >> ver;
+            if(ver==1){
+                topologia.mejor_camino();
+            }
+            if(ver==2){
+                topologia.costo_puntual();
+            }
+            cout<<endl;
+            cout<<"para volver al menu ingrese 0: ";
+        }
+        if (opcion==6){
+            int opc=0;
+            cout<<"si desea agrgar routers ingrese 1: "<<endl;
+            cout<<"si desea eliminar routers ingrese2: "<<endl;
+            cin>>opc;
+            if(opc==1){
+                topologia.agregar_routers();
+                topologia.setTabla(topologia.getTablaoriginal()); //se atualizala red
+                nodo.setNodo(topologia.getTablaoriginal());
+                nodo.setNombre(topologia.getNombreNodos());
+            }
+            if(opc==2){
+                topologia.eliminar_routers();
+                topologia.setTabla(topologia.getTablaoriginal()); //se atualizala red
+                nodo.setNodo(topologia.getTablaoriginal());
+                nodo.setNombre(topologia.getNombreNodos());
+            }
+            cout<<"para voliver al menu ingrese 0: ";
+        }
+        else if(opcion==7){
+            bandera=false;
+        }
     }
 
     return 0;
